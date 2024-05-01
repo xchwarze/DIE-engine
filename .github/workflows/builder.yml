@@ -68,7 +68,7 @@ jobs:
           bash -x build_mac.sh
 
   build-windows-32:
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -110,7 +110,7 @@ jobs:
           cmd /c "call $source_path\build_win_generic.cmd"
           
   build-windows-64:
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
