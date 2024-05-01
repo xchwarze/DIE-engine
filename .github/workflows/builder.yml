@@ -96,8 +96,8 @@ jobs:
           $qmake_path = "${{ github.workspace }}\Qt\5.15.2\msvc2019\bin\qmake.exe"
           $sevenzip_path = "C:\Program Files\7-Zip\7z.exe"
           $innosetup_path = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-          $source_path = ${{ github.workspace }}\DIE-engine
           $build_prefix = 'win32'
+          $source_path = ${{ github.workspace }}\code
           $release_version = Get-Content "$source_path\release_version.txt"
           
           echo "VSVARS_PATH=$vcvars_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
@@ -142,8 +142,8 @@ jobs:
           $qmake_path = "${{ github.workspace }}\Qt\5.15.2\msvc2019_64\bin\qmake.exe"
           $sevenzip_path = "C:\Program Files\7-Zip\7z.exe"
           $innosetup_path = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-          $source_path = ${{ github.workspace }}\DIE-engine
           $build_prefix = 'win64'
+          $source_path = ${{ github.workspace }}\code
           $release_version = Get-Content "$source_path\release_version.txt"
           
           echo "VSVARS_PATH=$vcvars_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
