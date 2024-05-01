@@ -8,6 +8,9 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+         submodules: 'recursive'
+         path: 'code'
 
       - name: Install dependencies
         run: |
@@ -17,15 +20,16 @@ jobs:
 
       - name: Build
         run: |
-          git clone --recursive https://github.com/horsicq/DIE-engine.git
-          cd DIE-engine
+          cd code
           bash -x build_dpkg.sh
-          sudo dpkg -i release/22.04
 
   build-ubuntu-20:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
+        with:
+         submodules: 'recursive'
+         path: 'code'
 
       - name: Install dependencies
         run: |
@@ -35,15 +39,16 @@ jobs:
 
       - name: Build
         run: |
-          git clone --recursive https://github.com/horsicq/DIE-engine.git
-          cd DIE-engine
+          cd code
           bash -x build_dpkg.sh
-          sudo dpkg -i release/20.04
 
   build-osx:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+         submodules: 'recursive'
+         path: 'code'
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
@@ -54,24 +59,19 @@ jobs:
           arch: 'clang_64'
           dir: ${{ github.workspace }}
 
-      - name: Clone project
-        run: git clone --recursive https://github.com/horsicq/DIE-engine.git
-
-      - name: Prepare build script
+      - name: Build
         run: |
-          cd DIE-engine
+          cd code
           sed -i '' "s|export QMAKE_PATH=\$HOME/Qt/5.15.2/clang_64/bin/qmake|export QMAKE_PATH=${{ github.workspace }}/Qt/5.15.2/clang_64/bin/qmake|" build_mac.sh
-
-      - name: Run build script
-        run: |
-          cd DIE-engine
           bash -x build_mac.sh
 
   build-windows-32:
     runs-on: windows-2019
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+         submodules: 'recursive'
+         path: 'code'
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
@@ -90,6 +90,8 @@ jobs:
 
       - name: Setup environment variables and run build script
         run: |
+          cd code
+
           $vcvars_path = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"
           $qmake_path = "${{ github.workspace }}\Qt\5.15.2\msvc2019\bin\qmake.exe"
           $sevenzip_path = "C:\Program Files\7-Zip\7z.exe"
@@ -112,8 +114,10 @@ jobs:
   build-windows-64:
     runs-on: windows-2019
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+         submodules: 'recursive'
+         path: 'code'
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
@@ -132,6 +136,8 @@ jobs:
 
       - name: Setup environment variables and run build script
         run: |
+          cd code
+
           $vcvars_path = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
           $qmake_path = "${{ github.workspace }}\Qt\5.15.2\msvc2019_64\bin\qmake.exe"
           $sevenzip_path = "C:\Program Files\7-Zip\7z.exe"
