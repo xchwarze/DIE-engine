@@ -1,0 +1,99 @@
+name: Build DIE-engine
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [14.04, 16.04, 18.04, 20.04, 21.04, 22.04]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install qtbase5-dev qtscript5-dev qttools5-dev-tools libqt5svg5-dev git build-essential -y
+          if [ ${{ matrix.version }} == "14.04" ] || [ ${{ matrix.version }} == "16.04" ] || [ ${{ matrix.version }} == "18.04" ] || [ ${{ matrix.version }} == "20.04" ]; then
+            sudo apt-get install qt5-default -y
+          else
+            sudo apt-get install qtchooser qt5-qmake -y
+          fi
+
+      - name: Build
+        run: |
+          git clone --recursive https://github.com/horsicq/DIE-engine.git
+          cd DIE-engine
+          bash -x build_dpkg.sh
+          sudo dpkg -i release/$(ls release)
+
+  build-osx:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '5.15.2'
+          host: 'mac'
+          target: 'desktop'
+          #arch: 'clang_64'
+
+      - name: Clone project
+        run: git clone --recursive https://github.com/horsicq/DIE-engine.git
+
+      - name: Prepare build script
+        run: |
+          cd DIE-engine
+          sed -i '' "s|export QMAKE_PATH=\$HOME/Qt/5.15.2/clang_64/bin/qmake|export QMAKE_PATH=${{ github.workspace }}/Qt/5.15.2/clang_64/bin/qmake|" build_mac.sh
+
+      - name: Run build script
+        run: |
+          cd DIE-engine
+          bash -x build_mac.sh
+
+  build-windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        architecture: ['x86', 'x64']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+        with:
+          msbuild-architecture: ${{ matrix.architecture }}
+          vs-version: '[16.0,17.0)'
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: '5.15.2'
+          host: 'windows'
+          target: 'desktop'
+          #arch: ${{ matrix.architecture == 'x64' ? 'win64_msvc2019_64' : 'win32_msvc2019' }}
+
+      - name: Setup environment variables and run build script
+        run: |
+          $vcvars_path = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars${{ matrix.architecture == 'x64' ? '64' : '32' }}.bat"
+          $qmake_path = "C:\Qt\5.15.2\${{ matrix.architecture == 'x64' ? 'msvc2019_64' : 'msvc2019' }}\bin\qmake.exe"
+          $sevenzip_path = "C:\Program Files\7-Zip\7z.exe"
+          $innosetup_path = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          $source_path = ${{ github.workspace }}\DIE-engine
+          $build_prefix = ${{ matrix.architecture == 'x64' ? 'win64' : 'win32' }}
+          $release_version = Get-Content "$source_path\release_version.txt"
+          echo "VSVARS_PATH=$vcvars_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
+          echo "QMAKE_PATH=$qmake_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
+          echo "SEVENZIP_PATH=$sevenzip_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
+          echo "INNOSETUP_PATH=$innosetup_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
+          echo "X_SOURCE_PATH=$source_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
+          echo "X_BUILD_NAME=die" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
+          echo "X_BUILD_PREFIX=$build_prefix" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
+          echo "X_RELEASE_VERSION=$release_version" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
+          cmd /c "call $source_path\build_win_generic.cmd"
+
