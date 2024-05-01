@@ -76,7 +76,7 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
         with:
-          msbuild-architecture: ${{ matrix.architecture }}
+          msbuild-architecture: x86
           vs-version: '[16.0,17.0)'
 
       - name: Install Qt
@@ -118,7 +118,7 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
         with:
-          msbuild-architecture: ${{ matrix.architecture }}
+          msbuild-architecture: x64
           vs-version: '[16.0,17.0)'
 
       - name: Install Qt
