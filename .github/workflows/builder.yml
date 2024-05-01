@@ -81,12 +81,15 @@ jobs:
       - name: Setup environment variables and run build script
         run: |
           $vcvars_path = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars${{ matrix.architecture == 'x64' ? '64' : '32' }}.bat"
-          $qmake_path = "C:\Qt\5.15.2\${{ matrix.architecture == 'x64' ? 'msvc2019_64' : 'msvc2019' }}\bin\qmake.exe"
+          #$qmake_path = "C:\Qt\5.15.2\${{ matrix.architecture == 'x64' ? 'msvc2019_64' : 'msvc2019' }}\bin\qmake.exe"
+          $qmake_path = "C:\Qt\5.15.2\msvc2019\bin\qmake.exe"
           $sevenzip_path = "C:\Program Files\7-Zip\7z.exe"
           $innosetup_path = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
           $source_path = ${{ github.workspace }}\DIE-engine
-          $build_prefix = ${{ matrix.architecture == 'x64' ? 'win64' : 'win32' }}
+          #$build_prefix = ${{ matrix.architecture == 'x64' ? 'win64' : 'win32' }}
+          $build_prefix = 'win32'
           $release_version = Get-Content "$source_path\release_version.txt"
+          
           echo "VSVARS_PATH=$vcvars_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
           echo "QMAKE_PATH=$qmake_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
           echo "SEVENZIP_PATH=$sevenzip_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
@@ -95,5 +98,6 @@ jobs:
           echo "X_BUILD_NAME=die" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
           echo "X_BUILD_PREFIX=$build_prefix" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
           echo "X_RELEASE_VERSION=$release_version" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
+          
           cmd /c "call $source_path\build_win_generic.cmd"
 
