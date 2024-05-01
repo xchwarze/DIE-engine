@@ -80,7 +80,8 @@ jobs:
 
       - name: Setup environment variables and run build script
         run: |
-          $vcvars_path = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars${{ matrix.architecture == 'x64' ? '64' : '32' }}.bat"
+          #$vcvars_path = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars${{ matrix.architecture == 'x64' ? '64' : '32' }}.bat"
+          $vcvars_path = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"
           #$qmake_path = "C:\Qt\5.15.2\${{ matrix.architecture == 'x64' ? 'msvc2019_64' : 'msvc2019' }}\bin\qmake.exe"
           $qmake_path = "C:\Qt\5.15.2\msvc2019\bin\qmake.exe"
           $sevenzip_path = "C:\Program Files\7-Zip\7z.exe"
