@@ -57,12 +57,11 @@ jobs:
           host: 'mac'
           target: 'desktop'
           arch: 'clang_64'
-          dir: ${{ github.workspace }}
+          #dir: ${{ github.workspace }}
 
       - name: Build
         run: |
           cd code
-          sed -i '' "s|export QMAKE_PATH=\$HOME/Qt/5.15.2/clang_64/bin/qmake|export QMAKE_PATH=${{ github.workspace }}/Qt/5.15.2/clang_64/bin/qmake|" build_mac.sh
           bash -x build_mac.sh
 
   build-windows-32:
