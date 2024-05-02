@@ -90,25 +90,15 @@ jobs:
       - name: Setup environment variables and run build script
         run: |
           cd code
-
-          $vcvars_path = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"
-          $qmake_path = "${{ github.workspace }}\Qt\5.15.2\msvc2019\bin\qmake.exe"
-          $sevenzip_path = "C:\Program Files\7-Zip\7z.exe"
-          $innosetup_path = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-          $build_prefix = "win32"
-          $source_path = "${{ github.workspace }}\code"
-          $release_version = Get-Content "$source_path\release_version.txt"
-          
-          echo "VSVARS_PATH=$vcvars_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "QMAKE_PATH=$qmake_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "SEVENZIP_PATH=$sevenzip_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "INNOSETUP_PATH=$innosetup_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "X_SOURCE_PATH=$source_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "X_BUILD_NAME=die" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "X_BUILD_PREFIX=$build_prefix" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "X_RELEASE_VERSION=$release_version" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          
-          cmd /c "call $source_path\build_win_generic.cmd"
+         
+          set VSVARS_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars32.bat"
+          set QMAKE_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019\bin\qmake.exe"
+          set SEVENZIP_PATH="C:\Program Files\7-Zip\7z.exe"
+          set INNOSETUP_PATH="C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          set X_BUILD_PREFIX="win32"
+          set X_SOURCE_PATH="${{ github.workspace }}\code"
+          for /f "delims=" %%x in ('type "%X_SOURCE_PATH%\release_version.txt"') do set X_RELEASE_VERSION=%%x
+          call "%X_SOURCE_PATH%\build_win_generic.cmd"
           
   build-windows-64:
     runs-on: windows-2019
@@ -134,25 +124,15 @@ jobs:
           dir: ${{ github.workspace }}
 
       - name: Setup environment variables and run build script
+        shell: cmd
         run: |
           cd code
 
-          $vcvars_path = "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
-          $qmake_path = "${{ github.workspace }}\Qt\5.15.2\msvc2019_64\bin\qmake.exe"
-          $sevenzip_path = "C:\Program Files\7-Zip\7z.exe"
-          $innosetup_path = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-          $build_prefix = "win64"
-          $source_path = "${{ github.workspace }}\code"
-          $release_version = Get-Content "$source_path\release_version.txt"
-          
-          echo "VSVARS_PATH=$vcvars_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "QMAKE_PATH=$qmake_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "SEVENZIP_PATH=$sevenzip_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "INNOSETUP_PATH=$innosetup_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "X_SOURCE_PATH=$source_path" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "X_BUILD_NAME=die" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "X_BUILD_PREFIX=$build_prefix" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          echo "X_RELEASE_VERSION=$release_version" | Out-File -Append -Encoding ASCII $env:GITHUB_ENV
-          
-          cmd /c "call $source_path\build_win_generic.cmd"
-
+          set VSVARS_PATH="C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvars64.bat"
+          set QMAKE_PATH="${{ github.workspace }}\Qt\5.15.2\msvc2019_64\bin\qmake.exe"
+          set SEVENZIP_PATH="C:\Program Files\7-Zip\7z.exe"
+          set INNOSETUP_PATH="C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          set X_BUILD_PREFIX="win64"
+          set X_SOURCE_PATH="${{ github.workspace }}\code"
+          for /f "delims=" %%x in ('type "%X_SOURCE_PATH%\release_version.txt"') do set X_RELEASE_VERSION=%%x
+          call "%X_SOURCE_PATH%\build_win_generic.cmd"
