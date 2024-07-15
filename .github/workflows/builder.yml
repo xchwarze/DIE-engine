@@ -9,7 +9,6 @@ env:
   SRC_PATH: ${{ github.workspace }}/src
   SRC_PATH_WIN: ${{ github.workspace }}\src
   RELEASE_PATH: ${{ github.workspace }}/src/release
-  RELEASE_PATH_WIN: ${{ github.workspace }}\src\release
 
 # the jobs are based on these notes:
 # https://github.com/horsicq/Detect-It-Easy/blob/master/docs/BUILD.md
@@ -147,9 +146,27 @@ jobs:
           for /f "delims=" %%x in ('type "%X_SOURCE_PATH%\release_version.txt"') do set X_RELEASE_VERSION=%%x
 
           echo on
-          echo "Test path: %X_SOURCE_PATH%\build\release\diec.exe"
           call "%X_SOURCE_PATH%\build_win_generic_check.cmd"
-          
+
+      - name: Upload Release as Artifact
+        if: github.event_name != 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows64-artifact
+          path: |
+            ${{ env.RELEASE_PATH }}/*.zip
+            ${{ env.RELEASE_PATH }}/*.exe
+
+      - name: Upload Release as Download
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            ${{ env.RELEASE_PATH }}/*.zip
+            ${{ env.RELEASE_PATH }}/*.exe
+
   build-windows-64:
     runs-on: windows-2019
     steps:
@@ -184,8 +201,28 @@ jobs:
           set INNOSETUP_PATH="C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
 
           set X_BUILD_PREFIX="win64"
-          set X_SOURCE_PATH="${{ env.SRC_PATH_WIN }}"
+          set X_SOURCE_PATH=${{ env.SRC_PATH_WIN }}
           for /f "delims=" %%x in ('type "%X_SOURCE_PATH%\release_version.txt"') do set X_RELEASE_VERSION=%%x
 
           echo on
           call "%X_SOURCE_PATH%\build_win_generic_check.cmd"
+
+      - name: Upload Release as Artifact
+        if: github.event_name != 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows64-artifact
+          path: |
+            ${{ env.RELEASE_PATH }}/*.zip
+            ${{ env.RELEASE_PATH }}/*.exe
+
+      - name: Upload Release as Download
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          files: |
+            ${{ env.RELEASE_PATH }}/*.zip
+            ${{ env.RELEASE_PATH }}/*.exe
+
