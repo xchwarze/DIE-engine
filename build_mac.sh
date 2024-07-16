@@ -10,7 +10,9 @@ export X_SOURCE_PATH=$PWD
 export X_BUILD_NAME=die_mac_portable
 export X_RELEASE_VERSION=$(cat "release_version.txt")
 
-source build_tools/mac.sh
+# for debug
+#source build_tools/mac.sh
+source mac.sh
 
 check_file $QMAKE_PATH
 
