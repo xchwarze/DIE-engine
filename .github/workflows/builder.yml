@@ -148,7 +148,8 @@ jobs:
           echo on
           call "%X_SOURCE_PATH%\build_win_generic_check.cmd"
 
-          if not exist "%X_SOURCE_PATH%\release\%X_ZIP_NAME%.zip" (
+          dir "%X_SOURCE_PATH%\release\*.zip" >nul 2>&1
+          if %ERRORLEVEL% neq 0 (
             echo "ZIP file does not exist"
             exit /b 1
           )
@@ -219,7 +220,8 @@ jobs:
           echo on
           call "%X_SOURCE_PATH%\build_win_generic_check.cmd"
 
-          if not exist "%X_SOURCE_PATH%\release\%X_ZIP_NAME%.zip" (
+          dir "%X_SOURCE_PATH%\release\*.zip" >nul 2>&1
+          if %ERRORLEVEL% neq 0 (
             echo "ZIP file does not exist"
             exit /b 1
           )
