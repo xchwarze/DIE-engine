@@ -148,24 +148,36 @@ jobs:
           echo on
           call "%X_SOURCE_PATH%\build_win_generic_check.cmd"
 
+          if not exist "%X_SOURCE_PATH%\release\%X_ZIP_NAME%.zip" (
+            echo "ZIP file does not exist"
+            exit /b 1
+          )
+
       - name: Upload Release as Artifact
         if: github.event_name != 'release'
         uses: actions/upload-artifact@v4
         with:
           name: windows64-artifact
+          # it is commented because as there is no install.iss there is no need to put the exe
+          #path: |
+          #  ${{ env.RELEASE_PATH }}/*.zip
+          #  ${{ env.RELEASE_PATH }}/*.exe
           path: |
             ${{ env.RELEASE_PATH }}/*.zip
-            ${{ env.RELEASE_PATH }}/*.exe
 
       - name: Upload Release as Download
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # it is commented because as there is no install.iss there is no need to put the exe
+        #with:
+        #  files: |
+        #    ${{ env.RELEASE_PATH }}/*.zip
+        #    ${{ env.RELEASE_PATH }}/*.exe
         with:
           files: |
             ${{ env.RELEASE_PATH }}/*.zip
-            ${{ env.RELEASE_PATH }}/*.exe
 
   build-windows-64:
     runs-on: windows-2019
@@ -207,22 +219,33 @@ jobs:
           echo on
           call "%X_SOURCE_PATH%\build_win_generic_check.cmd"
 
+          if not exist "%X_SOURCE_PATH%\release\%X_ZIP_NAME%.zip" (
+            echo "ZIP file does not exist"
+            exit /b 1
+          )
+
       - name: Upload Release as Artifact
         if: github.event_name != 'release'
         uses: actions/upload-artifact@v4
         with:
           name: windows64-artifact
+          # it is commented because as there is no install.iss there is no need to put the exe
+          #path: |
+          #  ${{ env.RELEASE_PATH }}/*.zip
+          #  ${{ env.RELEASE_PATH }}/*.exe
           path: |
             ${{ env.RELEASE_PATH }}/*.zip
-            ${{ env.RELEASE_PATH }}/*.exe
 
       - name: Upload Release as Download
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # it is commented because as there is no install.iss there is no need to put the exe
+        #with:
+        #  files: |
+        #    ${{ env.RELEASE_PATH }}/*.zip
+        #    ${{ env.RELEASE_PATH }}/*.exe
         with:
           files: |
             ${{ env.RELEASE_PATH }}/*.zip
-            ${{ env.RELEASE_PATH }}/*.exe
-
