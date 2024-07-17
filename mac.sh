@@ -38,7 +38,9 @@ function make_build
         make clean
     fi
 
-    $QMAKE_PATH -d "$1" -spec $X_QMAKE_SPEC CONFIG+=x86_64 CONFIG+=release
+    #$QMAKE_PATH -d "$1" -spec $X_QMAKE_SPEC CONFIG+=x86_64 CONFIG+=release
+    # changes from https://stackoverflow.com/questions/77136519/qmake-failing-with-sdk-14-ventura-13-5-2
+    $QMAKE_PATH -d "$1" QMAKE_DEFAULT_LIBDIRS=$(xcrun -show-sdk-path)/usr/lib -spec $X_QMAKE_SPEC CONFIG+=x86_64 CONFIG+=release
     make -f Makefile
 }
 
