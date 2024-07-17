@@ -159,7 +159,7 @@ jobs:
         if: github.event_name != 'release'
         uses: actions/upload-artifact@v4
         with:
-          name: windows64-artifact
+          name: windows32-artifact
           # it is commented because as there is no install.iss there is no need to put the exe
           #path: |
           #  ${{ env.RELEASE_PATH }}/*.zip
